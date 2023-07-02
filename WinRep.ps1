@@ -1,8 +1,8 @@
 $ProgressPreference = 'SilentlyContinue'
 $host.ui.RawUI.WindowTitle = "Windows - Reparatur-Tool"
 [Console]::WindowWidth=101;
-[Console]::Windowheight=26;
-[Console]::setBufferSize(101,26) #width,height
+[Console]::Windowheight=28;
+[Console]::setBufferSize(101,28) #width,height
 
 $Display = {
 Write-Host "                             __      __.__      __________               
@@ -51,18 +51,20 @@ function menu {
     Write-Host "    8: Windows Höchstleistungsmodus                                          " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    0: Quit                                                                  " -ForegroundColor Magenta -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "           ╠═════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow   
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "    0: Beenden                                                  9: Readme    " -ForegroundColor Magenta -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
     Write-Host
 
 
     $actions = "0"
-    while ($actions -notin "0..8") {
+    while ($actions -notin "0..9") {
     $actions = Read-Host -Prompt '                Was möchtest du tun?'
-        if ($actions -in 0..8) {
+        if ($actions -in 0..9) {
             if ($actions -eq 0) {
                 exit
             }
@@ -341,8 +343,8 @@ function menu {
                 Write-Host "║" -ForegroundColor Yellow
                 powercfg -setdcvalueindex scheme_current sub_buttons 7648efa3-dd9c-4e3e-b566-50f929386280 3 | Out-Null
                 powercfg -setacvalueindex scheme_current sub_buttons 7648efa3-dd9c-4e3e-b566-50f929386280 3 | Out-Null
-		powercfg -setdcvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
-		powercfg -setacvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
+				powercfg -setdcvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
+				powercfg -setacvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
                 Start-Sleep 1
 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
@@ -354,6 +356,11 @@ function menu {
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
                 Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            }
+
+            if ($actions -eq 9) {
+                Start-Process "https://github.com/TrelLyX/WinRep#readme"
+                menu
             }
             menu
         }
