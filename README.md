@@ -10,7 +10,7 @@ Es bietet eine Sammlung nützlicher Tools und Befehle, um Probleme mit dem Windo
 ## Verwendung
 1. Führen Sie das Skript "WinRep.ps1" oder als exe aus.
 2. Das Skript zeigt ein Menü mit Optionen für verschiedene Diagnose- und Reparatur Möglichkeiten an.
-3. Wählen Sie die gewünschte Op􀆟on aus, indem Sie die entsprechende Nummer eingeben.
+3. Wählen Sie die gewünschte Option aus, indem Sie die entsprechende Nummer eingeben.
 4. Das Skript führt dann, je nach ausgewählter option, die entsprechende befehle aus.
 5. Sobald dies abgeschlossen ist, wird eine Bestätigungsmeldung angezeigt.
 
