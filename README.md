@@ -20,9 +20,9 @@ Es bietet eine Sammlung nützlicher Tools und Befehle, um Probleme mit dem Windo
 3. Automatische Reparaturvogänge durchführen           [DISM RestoreHealth]
 4. Systemdateien Prüfen und Reparieren                 [SFC Scannow]
 5. Netzwerkeinstellungen zurücksetzen                  [FlushDNS, WinSock reset und vieles mehr]
-6: Zuverlässigkeitsverlauf 
-7: Upgrade von Windows Home auf Windows Pro
-8: Windows Höchstleistungsmodus                        [Energiesparplan auf Höchstleistung inkl. weitere Optimierungen]
+6. Zuverlässigkeitsverlauf
+7. Upgrade von Windows Home auf Windows Pro
+8. Windows Höchstleistungsmodus                        [Energiesparplan auf Höchstleistung inkl. weitere Optimierungen]
 
 ## Hinweise
 - Das Script kann helfen um Windows Probleme zu finden und gegebenfalls aus zu beheben.
