@@ -341,8 +341,8 @@ function menu {
                 Write-Host "║" -ForegroundColor Yellow
                 powercfg -setdcvalueindex scheme_current sub_buttons 7648efa3-dd9c-4e3e-b566-50f929386280 3 | Out-Null
                 powercfg -setacvalueindex scheme_current sub_buttons 7648efa3-dd9c-4e3e-b566-50f929386280 3 | Out-Null
-				powercfg -setdcvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
-				powercfg -setacvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
+		powercfg -setdcvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
+		powercfg -setacvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
                 Start-Sleep 1
 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
