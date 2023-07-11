@@ -1,8 +1,8 @@
 $ProgressPreference = 'SilentlyContinue'
 $host.ui.RawUI.WindowTitle = "Windows - Reparatur-Tool"
 [Console]::WindowWidth=101;
-[Console]::Windowheight=28;
-[Console]::setBufferSize(101,28) #width,height
+[Console]::Windowheight=30;
+[Console]::setBufferSize(101,30) #width,height
 
 $Display = {
 Write-Host "                             __      __.__      __________               
@@ -11,6 +11,44 @@ Write-Host "                             __      __.__      __________
                              \        /|  |   |  \    |   \  ___/|  |_> >
                               \__/\  / |__|___|  /____|_  /\___  >   __/ 
                                    \/          \/       \/     \/|__|                        v2.0.0" -ForegroundColor Red
+}
+
+$RestoreSystem = {
+Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
+Write-Host "           ╠══════════════════════════" -ForegroundColor Yellow -NoNewLine
+Write-Host " Windows - Systemrestore " -ForegroundColor Magenta -NoNewLine
+Write-Host "══════════════════════════╣" -ForegroundColor Yellow
+Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+Write-Host "   Sichere Systemdateien, Treiberdatein und Konfigurationsdatein....         " -ForegroundColor Red -NoNewLine
+Write-Host "║" -ForegroundColor Yellow
+Start-Sleep 2
+Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+Write-Host "   Sichere Registrierungsdatenbank....                                       " -ForegroundColor Red -NoNewLine
+Write-Host "║" -ForegroundColor Yellow
+Start-Sleep 2
+Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+Write-Host "   Sichere Master Boot Record (MBR)....                                      " -ForegroundColor Red -NoNewLine
+Write-Host "║" -ForegroundColor Yellow
+Start-Sleep 2
+Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+Write-Host "   Sichere Anwendungsdaten und Einstellungen....                             " -ForegroundColor Red -NoNewLine
+Write-Host "║" -ForegroundColor Yellow
+Start-Sleep 2
+Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+Write-Host "   Erstelle Wiederherstellungspunkt.... Bitte Warten                         " -ForegroundColor Red -NoNewLine
+Write-Host "║" -ForegroundColor Yellow
+# Erstellung des Wiederherstellungspunkts
+Checkpoint-Computer -Description "$restorePointName" -RestorePointType "MODIFY_SETTINGS"
+Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
+Write-Host "`n           Ein Wiederherstellungspunkt mit dem Namen '$restorePointName' wurde erstellt."
+Write-Host
+Start-Sleep 1
 }
 
 function menu {
@@ -49,12 +87,15 @@ function menu {
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "    8: Windows Höchstleistungsmodus                                          " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "    9: Windows Wiederherstellungspunkt erstellen                             " -ForegroundColor Cyan -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow  
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╠═════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    0: Beenden                                                  9: Readme    " -ForegroundColor Magenta -NoNewLine
+    Write-Host "    0: Beenden                                                 10: Readme    " -ForegroundColor Magenta -NoNewLine
     Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
@@ -62,9 +103,9 @@ function menu {
 
 
     $actions = "0"
-    while ($actions -notin "0..9") {
+    while ($actions -notin "0..10") {
     $actions = Read-Host -Prompt '                Was möchtest du tun?'
-        if ($actions -in 0..9) {
+        if ($actions -in 0..10) {
             if ($actions -eq 0) {
                 exit
             }
@@ -88,7 +129,7 @@ function menu {
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
                 Start-Process -Wait -FilePath "C:\Windows\System32\DISM.exe" -ArgumentList '/Online /Cleanup-Image /ScanHealth' -NoNewWindow
                 Write-Host
-                Write-Host "`n     Press any key to continue..." -ForegroundColor Green
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
@@ -108,7 +149,7 @@ function menu {
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
                 Start-Process -Wait -FilePath "C:\Windows\System32\DISM.exe" -ArgumentList '/Online /Cleanup-Image /CheckHealth' -NoNewWindow
                 Write-Host 
-                Write-Host "`n     Press any key to continue..." -ForegroundColor Green
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
@@ -132,7 +173,7 @@ function menu {
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
                 Start-Process -Wait -FilePath "C:\Windows\System32\DISM.exe" -ArgumentList '/Online /Cleanup-Image /RestoreHealth' -NoNewWindow
                 Write-Host 
-                Write-Host "`n     Press any key to continue..." -ForegroundColor Green
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
@@ -156,7 +197,7 @@ function menu {
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
                 Start-Process -Wait -FilePath "C:\Windows\System32\SFC.exe" -ArgumentList '/scannow' -NoNewWindow
                 Write-Host
-                Write-Host "`n     Press any key to continue..." -ForegroundColor Green
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
@@ -358,8 +399,66 @@ function menu {
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
+            # Wiederherstellungspunkt erstellen.
             if ($actions -eq 9) {
-                Start-Process "https://github.com/TrelLyX/WinRep#readme"
+                Clear-Host
+                Invoke-Command -ScriptBlock $Display
+                Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
+                Write-Host "           ╠══════════════════════════" -ForegroundColor Yellow -NoNewLine
+                Write-Host " Windows - Systemrestore " -ForegroundColor Magenta -NoNewLine
+                Write-Host "══════════════════════════╣" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Ein Windows-Wiederherstellungspunkt ist eine Möglichkeit,                 " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   das Betriebssystem auf einen vorherigen stabilen Zustand zurückzusetzen,  " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   um Systemprobleme zu beheben.                                             " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Es sichert Systemdateien und ermöglicht eine einfache Wiederherstellung.  " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow             
+                Enable-ComputerRestore -Drive C:\ | Out-Null
+                $null = & vssadmin.exe resize shadowstorage /For=C: /On=C: /maxSize=5GB
+                Write-Host "           ╠═════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Konfiguration des Windows-Wiederherstellungspunkt wird ausgeführt.        " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow    
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
+                Write-Host
+
+                $RestoreName = Read-Host "           Standard Name auswählen? [Default: FACTORY-RESTORE] (J/N)"
+                if ($RestoreName -eq 'N') {
+                    # Benutzerabfrage für den Namen des Wiederherstellungspunkts
+                    $restorePointName = Read-Host "`n           Geben Sie einen Namen für den Wiederherstellungspunkt an"
+    
+                    Clear-Host
+                    Invoke-Command -ScriptBlock $Display
+                    Invoke-Command -ScriptBlock $RestoreSystem
+                    Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
+                    $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+                    }
+                elseif ($RestoreName -eq 'J') {
+                    # Vorgegebener Name für den Wiederherstellungspunkt
+                    $restorePointName = "FACTORY-RESTORE" 
+                    Clear-Host
+                    $null = & vssadmin delete shadows /all /quiet
+                    Invoke-Command -ScriptBlock $Display
+                    Invoke-Command -ScriptBlock $RestoreSystem
+                    Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
+                    $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+                    }
+                menu
+            }
+
+            # Github Readme öffnen für weitere Informationen.
+            if ($actions -eq 10) {
+                Start-Process "https://github.com/IG-Community/WinRep#readme"
                 menu
             }
             menu
