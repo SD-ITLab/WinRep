@@ -1,6 +1,6 @@
 # Windows Reparatur Tool | WinRep
 
-Version: 2.0.0
+Version: 2.5.0
 
 ## Beschreibung
 
@@ -23,12 +23,14 @@ Es bietet eine Sammlung nützlicher Tools und Befehle, um Probleme mit dem Windo
 6. Zuverlässigkeitsverlauf
 7. Upgrade von Windows Home auf Windows Pro
 8. Windows Höchstleistungsmodus                        [Energiesparplan auf Höchstleistung inkl. weitere Optimierungen]
+9. Wiederherstellungspunkt erstellen.
 
 ## Hinweise
-- Das Script kann helfen um Windows Probleme zu finden und gegebenfalls aus zu beheben.
+- Das Script kann helfen um Windows Probleme zu finden und gegebenfalls zu beheben.
 - Alle Befehlszeilen sind in Windows Integriert, mit diesem Script wird es nur vereinfachter dargestellt.
 
 ## Versionsgeschichte
+- Version 2.5.0: Kleinere Überarbeitung und Hinzufügen von Wiederherstellungsoption
 - Version 2.0.0: Code vollständig überarbeitet Inkl. Optische verbesserungen und bereinigungen
 - Version 1.0.0: Erste Veröffentlichung
 
