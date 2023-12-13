@@ -16,8 +16,20 @@ Write-Host "                             __      __.__      __________
 # Computernamen abrufen
 $computerName = $env:COMPUTERNAME
 
-# Netzwerk-IP abrufen (Beispiel für IPv4)
-$networkIP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -ne '127.0.0.1' }).IPAddress
+# Funktion, um die IP-Adresse basierend auf dem aktiven Netzwerkprofil abzurufen
+function Get-ActiveNetworkIP {
+    $activeNetwork = Get-NetConnectionProfile | Where-Object { $_.InterfaceAlias -like 'Ethernet*' -or $_.InterfaceAlias -like 'Wi-Fi*' }
+
+    if ($activeNetwork) {
+        $ipAddress = (Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias $activeNetwork.InterfaceAlias).IPAddress
+        return $ipAddress
+    } else {
+        return $null
+    }
+}
+
+# IP-Adresse basierend auf dem aktiven Netzwerkprofil abrufen
+$activeIP = Get-ActiveNetworkIP
 
 # Betriebssystem abrufen
 $operatingSystem = (Get-CimInstance Win32_OperatingSystem).Caption
@@ -85,7 +97,7 @@ function menu {
     Write-Host ("    Computername   = {0}" -f (Format-Text $computerName)) -ForegroundColor Green -NoNewline
     Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewline 
-    Write-Host ("    Netzwerk - IP  = {0}" -f (Format-Text $networkIP)) -ForegroundColor Green -NoNewline
+    Write-Host ("    Netzwerk - IP  = {0}" -f (Format-Text $activeIP)) -ForegroundColor Green -NoNewline
     Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewline 
     Write-Host ("    Betriebssystem = {0}" -f (Format-Text $operatingSystem)) -ForegroundColor Green -NoNewline
