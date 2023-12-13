@@ -1,8 +1,8 @@
 $ProgressPreference = 'SilentlyContinue'
 $host.ui.RawUI.WindowTitle = "Windows - Reparatur-Tool"
 [Console]::WindowWidth=101;
-[Console]::Windowheight=30;
-[Console]::setBufferSize(101,30) #width,height
+[Console]::Windowheight=45;
+[Console]::setBufferSize(101,45) #width,height
 
 $Display = {
 Write-Host "                             __      __.__      __________               
@@ -10,8 +10,30 @@ Write-Host "                             __      __.__      __________
                             \   \/\/   /  |/    \|       _// __ \\____ \ 
                              \        /|  |   |  \    |   \  ___/|  |_> >
                               \__/\  / |__|___|  /____|_  /\___  >   __/ 
-                                   \/          \/       \/     \/|__|                        v2.0.0" -ForegroundColor Red
+                                   \/          \/       \/     \/|__|                        v3.0.0" -ForegroundColor Red
 }
+
+# Computernamen abrufen
+$computerName = $env:COMPUTERNAME
+
+# Netzwerk-IP abrufen (Beispiel für IPv4)
+$networkIP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -ne '127.0.0.1' }).IPAddress
+
+# Betriebssystem abrufen
+$operatingSystem = (Get-CimInstance Win32_OperatingSystem).Caption
+
+# CPU-Namen abrufen
+$cpuName = (Get-CimInstance -ClassName Win32_Processor).Name
+
+# Maximale Breite für die Informationen
+$maxWidth = 56
+
+# Funktion zum Kürzen oder Auffüllen von Text auf die maximale Breite
+function Format-Text($text) {
+    $textLength = $text.Length
+    $padding = [Math]::Max(0, $maxWidth - $textLength)
+    return $text + (' ' * $padding)
+    }
 
 $RestoreSystem = {
 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
@@ -55,24 +77,44 @@ function menu {
     Clear-Host
     Invoke-Command -ScriptBlock $Display
     Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
+    Write-Host "           ╠════════════════════════════" -ForegroundColor Yellow -NoNewline
+    Write-Host " Systeminformationen " -ForegroundColor Magenta -NoNewline
+    Write-Host "════════════════════════════╣" -ForegroundColor Yellow
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewline
+    Write-Host ("    Computername   = {0}" -f (Format-Text $computerName)) -ForegroundColor Green -NoNewline
+    Write-Host "║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewline 
+    Write-Host ("    Netzwerk - IP  = {0}" -f (Format-Text $networkIP)) -ForegroundColor Green -NoNewline
+    Write-Host "║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewline 
+    Write-Host ("    Betriebssystem = {0}" -f (Format-Text $operatingSystem)) -ForegroundColor Green -NoNewline
+    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewline
+    Write-Host ("    Prozessor      = {0}" -f (Format-Text $cpuName)) -ForegroundColor Green -NoNewline
+    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╠═══════════════════════════════" -ForegroundColor Yellow -NoNewline
     Write-Host " Windows Tools " -ForegroundColor Magenta -NoNewline
     Write-Host "═══════════════════════════════╣" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    1: Windows Komponentenspeicher auf Fehler Prüfen       [ScanHealth]      " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     1: Windows Komponentenspeicher auf Fehler Prüfen      [ScanHealth]      " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    2: Überprüfen ob Windows als beschädigt makiert wurde  [CheckHealth]     " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     2: Überprüfen ob Windows als beschädigt makiert wurde [CheckHealth]     " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    3: Automatische Reparaturvogänge durchführen           [RestoreHealth]   " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     3: Automatische Reparaturvogänge durchführen          [RestoreHealth]   " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    4: Systemdateien Prüfen und Reparieren                 [SFC Scannow]     " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     4: Abgelöste Startkomponenten bereinigen              [ComponentCleanup]" -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    5: Netzwerkeinstellungen zurücksetzen                  [FlushDNS usw.]   " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     5: Systemdateien Prüfen und Reparieren                [SFC Scannow]     " -ForegroundColor Cyan -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "     6: Netzwerkeinstellungen zurücksetzen                 [FlushDNS usw.]   " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╠═════════════════════════════════" -ForegroundColor Yellow -NoNewline
@@ -80,22 +122,25 @@ function menu {
     Write-Host "═════════════════════════════════╣" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    6: Zuverlässigkeitsverlauf                                               " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     7: Windows Store Zurücksetzen / Cache Reinigung                         " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    7: Upgrade von Windows Home auf Windows Pro                              " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     8: Zuverlässigkeitsverlauf                                              " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow 
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    8: Windows Höchstleistungsmodus                                          " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     9: Upgrade von Windows Home auf Windows Pro                             " -ForegroundColor Cyan -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "    10: Windows Höchstleistungsmodus                                         " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    9: Windows Wiederherstellungspunkt erstellen                             " -ForegroundColor Cyan -NoNewLine
+    Write-Host "    11: Windows Wiederherstellungspunkt erstellen                            " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow  
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╠═════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    0: Beenden                                                 10: Readme    " -ForegroundColor Magenta -NoNewLine
+    Write-Host "    0: Beenden                                                 12: Readme    " -ForegroundColor Magenta -NoNewLine
     Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
@@ -103,9 +148,9 @@ function menu {
 
 
     $actions = "0"
-    while ($actions -notin "0..10") {
+    while ($actions -notin "0..12") {
     $actions = Read-Host -Prompt '                Was möchtest du tun?'
-        if ($actions -in 0..10) {
+        if ($actions -in 0..12) {
             if ($actions -eq 0) {
                 exit
             }
@@ -177,8 +222,32 @@ function menu {
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
-            # Startet den System File Checker um beschädigte Windows Systemdateien auf Fehler zu überprüfen und gegebenfalls direkt zu Reparieren.
+            # Startet den DISM Komponentenbereinigung um nicht mehr benötigte und temporäre Dateien, die während der Installation von Updates und Patches erstellt wurden, zu entfernen.
             if ($actions -eq 4) {
+                Clear-Host
+                Invoke-Command -ScriptBlock $Display
+                Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
+                Write-Host "           ╠═════════════════════════════" -ForegroundColor Yellow -NoNewLine
+                Write-Host " DISM STARTCLEANUP " -ForegroundColor Magenta -NoNewLine
+                Write-Host "═════════════════════════════╣" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow 
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Bereinigung der Temporären Startkomponenten..                             " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Dieser Vorgang wird einige Minuten dauern.                                " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
+                Start-Process -Wait -FilePath "C:\Windows\System32\DISM.exe" -ArgumentList '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow
+                Write-Host
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
+                $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            }
+
+            # Startet den System File Checker um beschädigte Windows Systemdateien auf Fehler zu überprüfen und gegebenfalls direkt zu Reparieren.
+            if ($actions -eq 5) {
                 Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
@@ -202,7 +271,7 @@ function menu {
             }
 
             # Setzt Windows Netzwerkadapter und Einstellungen auf die ursprüngliche Werte um Netzwerkprobleme zu beheben.
-            if ($actions -eq 5) {
+            if ($actions -eq 6) {
                 Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
@@ -250,13 +319,18 @@ function menu {
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
+            # Bereinigung des Microsoft Store Cache zur Fehlerbehebung.
+            if ($actions -eq 7) {
+                Start-Process -FilePath "wsreset.exe" -Wait
+            }
+
             # Öffnet den Windows Zuverlässigkeitsverlauf.
-            if ($actions -eq 6) {
+            if ($actions -eq 8) {
                 perfmon /rel
             }
 
             # Windows Home System mit KMS Upgrade Key auf Windows Pro ändern ohne Neuinstallation.
-            if ($actions -eq 7) {
+            if ($actions -eq 9) {
                 Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
@@ -311,7 +385,7 @@ function menu {
             }
 
             # Windows Optimierung: Energiesparplan auf Höchstleistung, Monitortimeout auf 0 Min, Ruhezustand / Schnellstart [Deaktivieren] und Stromtaster auf Herunterfahren umstellen.
-            if ($actions -eq 8) {
+            if ($actions -eq 10) {
                 Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
@@ -400,7 +474,7 @@ function menu {
             }
 
             # Wiederherstellungspunkt erstellen.
-            if ($actions -eq 9) {
+            if ($actions -eq 11) {
                 Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
@@ -430,10 +504,10 @@ function menu {
                 Write-Host "║" -ForegroundColor Yellow    
                 Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
-                Write-Host
+                Write-Host 
 
-                $RestoreName = Read-Host "           Standard Name auswählen? [Default: FACTORY-RESTORE] (J/N)"
-                if ($RestoreName -eq 'N') {
+                $RestoreName = Read-Host "             Eigener Name für Wiederherstellungspunkt? [Default: FACTORY-RESTORE] (J/N)"
+                if ($RestoreName -eq 'J') {
                     # Benutzerabfrage für den Namen des Wiederherstellungspunkts
                     $restorePointName = Read-Host "`n           Geben Sie einen Namen für den Wiederherstellungspunkt an"
     
@@ -443,7 +517,7 @@ function menu {
                     Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
                     $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
                     }
-                elseif ($RestoreName -eq 'J') {
+                elseif ($RestoreName -eq 'N') {
                     # Vorgegebener Name für den Wiederherstellungspunkt
                     $restorePointName = "FACTORY-RESTORE" 
                     Clear-Host
@@ -457,7 +531,7 @@ function menu {
             }
 
             # Github Readme öffnen für weitere Informationen.
-            if ($actions -eq 10) {
+            if ($actions -eq 12) {
                 Start-Process "https://github.com/IG-Community/WinRep#readme"
                 menu
             }
