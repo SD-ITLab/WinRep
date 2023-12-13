@@ -532,7 +532,7 @@ function menu {
 
             # Github Readme öffnen für weitere Informationen.
             if ($actions -eq 12) {
-                Start-Process "https://github.com/IG-Community/WinRep#readme"
+                Start-Process "https://github.com/SD-ITLab/WinRep"
                 menu
             }
             menu
