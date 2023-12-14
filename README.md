@@ -1,5 +1,7 @@
 # Windows Reparatur Tool | WinRep
 
+![WinRep](https://github.com/SD-ITLab/WinRep/assets/30149483/542442fc-23ce-4c58-bfbd-b4cb513e5e6e)
+
 Version: 3.0.0
 
 ## Beschreibung
