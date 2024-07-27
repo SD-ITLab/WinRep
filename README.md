@@ -36,7 +36,7 @@ Es bietet eine Sammlung nützlicher Tools und Befehle, um Probleme mit dem Windo
 - Desweiteren werden Systeminformationen wie Computername, Lokale-IP-Addresse, Windows Version und die verbaute CPU
 
 ## Versionsgeschichte
-- Version 3.5.0: Fixes und Erweierung der Netzwerk-Reset und Performance Optimierungsoption
+- Version 3.5.0: Fixes und Erweiterung der Netzwerk-Reset und Performance Optimierungsoption
 - Version 3.0.0: Erweiterung kleiner Funktionen und einbindung von Systeminformationen
 - Version 2.5.0: Kleinere Überarbeitung und Hinzufügen von Wiederherstellungsoption
 - Version 2.0.0: Code vollständig überarbeitet Inkl. Optische verbesserungen und bereinigungen
