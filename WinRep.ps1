@@ -10,7 +10,7 @@ Write-Host "                             __      __.__      __________
                             \   \/\/   /  |/    \|       _// __ \\____ \ 
                              \        /|  |   |  \    |   \  ___/|  |_> >
                               \__/\  / |__|___|  /____|_  /\___  >   __/ 
-                                   \/          \/       \/     \/|__|                        v3.0.0" -ForegroundColor Red
+                                   \/          \/       \/     \/|__|                        v3.5.0" -ForegroundColor Red
 }
 
 # Computernamen abrufen
@@ -18,14 +18,19 @@ $computerName = $env:COMPUTERNAME
 
 # Funktion, um die IP-Adresse basierend auf dem aktiven Netzwerkprofil abzurufen
 function Get-ActiveNetworkIP {
-    $activeNetwork = Get-NetConnectionProfile | Where-Object { $_.InterfaceAlias -like 'Ethernet*' -or $_.InterfaceAlias -like 'Wi-Fi*' }
+    # Hole alle Netzwerkprofile mit aktivem Status
+    $activeNetworks = Get-NetConnectionProfile | Where-Object { $_.NetworkCategory -ne "Public" }
 
-    if ($activeNetwork) {
-        $ipAddress = (Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias $activeNetwork.InterfaceAlias).IPAddress
-        return $ipAddress
-    } else {
-        return $null
+    foreach ($network in $activeNetworks) {
+        # Hole die IP-Adresse für das Netzwerk
+        $ipAddress = (Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias $network.InterfaceAlias | Where-Object { $_.IPAddress -ne $null }).IPAddress
+
+        if ($ipAddress) {
+            return $ipAddress
+        }
     }
+
+    return $null
 }
 
 # IP-Adresse basierend auf dem aktiven Netzwerkprofil abrufen
@@ -48,41 +53,41 @@ function Format-Text($text) {
     }
 
 $RestoreSystem = {
-Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
-Write-Host "           ╠══════════════════════════" -ForegroundColor Yellow -NoNewLine
-Write-Host " Windows - Systemrestore " -ForegroundColor Magenta -NoNewLine
-Write-Host "══════════════════════════╣" -ForegroundColor Yellow
-Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-Write-Host "   Sichere Systemdateien, Treiberdatein und Konfigurationsdatein....         " -ForegroundColor Red -NoNewLine
-Write-Host "║" -ForegroundColor Yellow
-Start-Sleep 2
-Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-Write-Host "   Sichere Registrierungsdatenbank....                                       " -ForegroundColor Red -NoNewLine
-Write-Host "║" -ForegroundColor Yellow
-Start-Sleep 2
-Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-Write-Host "   Sichere Master Boot Record (MBR)....                                      " -ForegroundColor Red -NoNewLine
-Write-Host "║" -ForegroundColor Yellow
-Start-Sleep 2
-Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-Write-Host "   Sichere Anwendungsdaten und Einstellungen....                             " -ForegroundColor Red -NoNewLine
-Write-Host "║" -ForegroundColor Yellow
-Start-Sleep 2
-Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-Write-Host "   Erstelle Wiederherstellungspunkt.... Bitte Warten                         " -ForegroundColor Red -NoNewLine
-Write-Host "║" -ForegroundColor Yellow
-# Erstellung des Wiederherstellungspunkts
-Checkpoint-Computer -Description "$restorePointName" -RestorePointType "MODIFY_SETTINGS"
-Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
-Write-Host "`n           Ein Wiederherstellungspunkt mit dem Namen '$restorePointName' wurde erstellt."
-Write-Host
-Start-Sleep 1
+    Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
+    Write-Host "           ╠══════════════════════════" -ForegroundColor Yellow -NoNewLine
+    Write-Host " Windows - Systemrestore " -ForegroundColor Magenta -NoNewLine
+    Write-Host "══════════════════════════╣" -ForegroundColor Yellow
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Sichere Systemdateien, Treiberdatein und Konfigurationsdatein....         " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Start-Sleep 2
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Sichere Registrierungsdatenbank....                                       " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Start-Sleep 2
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Sichere Master Boot Record (MBR)....                                      " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Start-Sleep 2
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Sichere Anwendungsdaten und Einstellungen....                             " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Start-Sleep 2
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Erstelle Wiederherstellungspunkt.... Bitte Warten                         " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    # Erstellung des Wiederherstellungspunkts
+    Checkpoint-Computer -Description "$restorePointName" -RestorePointType "MODIFY_SETTINGS"
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
+    Write-Host "`n           Ein Wiederherstellungspunkt mit dem Namen '$restorePointName' wurde erstellt."
+    Write-Host
+    Start-Sleep 1
 }
 
 function menu {
@@ -290,7 +295,17 @@ function menu {
                 Write-Host "           ╠══════════════════════════════" -ForegroundColor Yellow -NoNewLine
                 Write-Host " Netzwerk  Reset " -ForegroundColor Magenta -NoNewLine
                 Write-Host "══════════════════════════════╣" -ForegroundColor Yellow
-                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow 
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Zurücksetzen von IPv4 und IPv6 auf DHCP.                                  " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                $networkAdapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }
+                foreach ($adapter in $networkAdapters) {
+                    netsh interface ip set address name="$($adapter.Name)" source=dhcp | Out-Null
+                    netsh interface ipv6 set address name="$($adapter.Name)" source=dhcp | Out-Null
+                    Start-Sleep 1
+                }
+                Start-Sleep 1 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Zurücksetzen des Winsock API Katalogs auf Standardeinstellungen.          " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
@@ -312,6 +327,11 @@ function menu {
                 Write-Host "   Wiederherstellung der Standard Firewall Einstellungen.                    " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
                 netsh advfirewall reset | Out-Null
+                Start-Sleep 1
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Zurücksetzen der Proxy Einstellungen.                                     " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                netsh winhttp reset proxy | Out-Null
                 Start-Sleep 1
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Netzwerk Reset Abgeschlossen.                                             " -ForegroundColor Red -NoNewLine
@@ -421,6 +441,14 @@ function menu {
                 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\explorer\ControlPanel\NameSpace\{025A5937-A6BE-4686-A844-36FE4BEC8B6D}' -Name PreferredPlan -Value 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
                 powercfg -setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c | Out-Null
                 Start-Sleep 1     
+
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Setze minimale Prozessorzustände...              [AC: 50% | DC: 5%]       " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                powercfg /setacvalueindex $planGUID 54533251-82be-4824-96c1-47b60b740d00 893dee8e-2bef-41e0-89c6-b55d0929964c 50
+                powercfg /setdcvalueindex $planGUID 54533251-82be-4824-96c1-47b60b740d00 893dee8e-2bef-41e0-89c6-b55d0929964c 5
+                powercfg /s $planGUID
+                Start-Sleep 1
 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Deaktiviere Ruhezustand...                                                " -ForegroundColor Red -NoNewLine
