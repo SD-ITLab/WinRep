@@ -19,7 +19,7 @@ $computerName = $env:COMPUTERNAME
 # Funktion, um die IP-Adresse basierend auf dem aktiven Netzwerkprofil abzurufen
 function Get-ActiveNetworkIP {
     # Hole alle Netzwerkprofile mit aktivem Status
-    $activeNetworks = Get-NetConnectionProfile | Where-Object { $_.NetworkCategory -ne "Public" }
+    $activeNetworks = Get-NetConnectionProfile
 
     foreach ($network in $activeNetworks) {
         # Hole die IP-Adresse für das Netzwerk
@@ -443,35 +443,41 @@ function menu {
                 Start-Sleep 1     
 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   Setze minimale Prozessorzustände...              [AC: 50% | DC: 5%]       " -ForegroundColor Red -NoNewLine
-                Write-Host "║" -ForegroundColor Yellow
-                powercfg /setacvalueindex $planGUID 54533251-82be-4824-96c1-47b60b740d00 893dee8e-2bef-41e0-89c6-b55d0929964c 50
-                powercfg /setdcvalueindex $planGUID 54533251-82be-4824-96c1-47b60b740d00 893dee8e-2bef-41e0-89c6-b55d0929964c 5
-                powercfg /s $planGUID
-                Start-Sleep 1
-
-                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Deaktiviere Ruhezustand...                                                " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
                 powercfg -hibernate off | Out-Null
                 Start-Sleep 1
 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   Optimiere Einstellungen für Festplatten Timeout... [Niemals Ausschalten]  " -ForegroundColor Red -NoNewLine
+                Write-Host "   Optimiere Einstellung für Mindest-CPU-zustand... [Strom: 50% | Akku: 5%]  " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
-                powercfg -change -disk-timeout-dc 30 | Out-Null
+                powercfg -SETACVALUEINDEX SCHEME_CURRENT 54533251-82be-4824-96c1-47b60b740d00 893dee8e-2bef-41e0-89c6-b55d0929964c 50
+                powercfg -SETDCVALUEINDEX SCHEME_CURRENT 54533251-82be-4824-96c1-47b60b740d00 893dee8e-2bef-41e0-89c6-b55d0929964c 5
+                Start-Sleep 1   
+
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Optimiere Einstellungen für Core Parking....     [Strom: 0% | Akku: 50%]  " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                powercfg -SETACVALUEINDEX SCHEME_CURRENT 54533251-82be-4824-96c1-47b60b740d00 0cc5b647-c1df-4637-891a-dec35c318583 100
+                powercfg -SETDCVALUEINDEX SCHEME_CURRENT 54533251-82be-4824-96c1-47b60b740d00 0cc5b647-c1df-4637-891a-dec35c318583 50
+                Start-Sleep 1
+
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Optimiere Einstellungen für Festplatten Timeout. [Strom: 0m | Akku: 15m]  " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                powercfg -change -disk-timeout-dc 15 | Out-Null
                 powercfg -change -disk-timeout-ac 0 | Out-Null
                 Start-Sleep 1
 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   Optimiere Einstellungen für Selektiven-USB-Modus...[Niemals Ausschalten]  " -ForegroundColor Red -NoNewLine
+                Write-Host "   Optimiere Einstellungen für Selektiven-USB-Modus [Strom: Off | Akku: On]  " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
                 powercfg -SETDCVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 1
                 powercfg -SETACVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
                 Start-Sleep 1
 
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   Optimiere Monitor-Timeout Einstellungen...      [Strom: 0m | Akku = 10m]  " -ForegroundColor Red -NoNewLine
+                Write-Host "   Optimiere Monitor-Timeout Einstellungen...       [Strom: 0m | Akku: 10m]  " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
                 powercfg -change -standby-timeout-ac 0 | Out-Null
                 powercfg -change -standby-timeout-dc 0 | Out-Null
@@ -501,7 +507,7 @@ function menu {
 				powercfg -setdcvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
 				powercfg -setacvalueindex scheme_current sub_buttons a7066653-8d6c-40a8-910e-a1f54b84c7e5 2 | Out-Null
                 Start-Sleep 1
-
+                powercfg /setactive SCHEME_CURRENT | Out-Null
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Optimierungen abgeschlossen.                                              " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
@@ -572,7 +578,7 @@ function menu {
 
             # Github Readme öffnen für weitere Informationen.
             if ($actions -eq 12) {
-                Start-Process "https://github.com/SD-ITLab/WinRep"
+                Start-Process "https://sd-itlab.de/windows-repairtools/"
                 menu
             }
             menu
