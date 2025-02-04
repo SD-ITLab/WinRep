@@ -1,6 +1,6 @@
 ![WinRep](https://github.com/user-attachments/assets/0ae514c2-5f21-4724-ad9c-f58bf5b4fe24)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://badgen.net/github/license/SD-ITLab/OptimizeWindows)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://badgen.net/github/license/SD-ITLab/WinRep)
 
 # WinRep | Windows Diagnose- & Reparatur-Skript  
 **Version: 3.6.1**  
