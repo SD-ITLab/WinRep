@@ -44,3 +44,48 @@ Es hilft dabei, Probleme im Windows-Betriebssystem zu erkennen und zu beheben, i
 🔹 **Version 3.0.0** – Integration neuer Funktionen & Anzeige von Systeminformationen  
 🔹 **Version 2.5.0** – Erweiterung der Wiederherstellungsoptionen und kleinere Überarbeitungen
 
+# WinRep | Windows Repair & Optimization
+
+**Version: 3.6.1**
+
+## 📌 Description
+The PowerShell script "WinRep.ps1" is a comprehensive script that includes various Windows diagnostic and recovery functions. 
+It provides a collection of useful tools and commands to identify and resolve issues with the Windows operating system.
+
+## 🚀 Usage
+1. Run the script "WinRep.ps1" or the compiled EXE.
+2. The script displays a menu with options for different diagnostic and repair tasks.
+3. Select the desired option by entering the corresponding number.
+4. The script executes the appropriate commands based on the selected option.
+5. Once completed, a confirmation message will be displayed.
+
+## 🛠️ Menu Options  
+1️⃣ **Check Windows Component Store for Errors** *(DISM ScanHealth)*  
+2️⃣ **Check if Windows is Marked as Corrupted** *(DISM CheckHealth)*  
+3️⃣ **Perform Automatic Repair Operations** *(DISM RestoreHealth)*  
+4️⃣ **Cleanup Deprecated Startup Components** *(ComponentCleanup)*  
+5️⃣ **Scan and Repair System Files** *(sfc /scannow)*  
+6️⃣ **Reset Network Settings** *(FlushDNS, WinSock reset, and more)*  
+7️⃣ **Reset Windows Store / Clear Cache**  
+8️⃣ **Reliability Monitor**  
+9️⃣ **Upgrade Windows Home to Windows Pro**  
+🔠 **Enable Windows Maximum Performance Mode** *(Set Power Plan to High Performance & additional optimizations)*  
+1️⃣1️⃣ **Create a System Restore Point**  
+
+## ℹ️ Notes
+✔ The script helps detect and, if necessary, fix Windows issues.
+✔ All command-line operations are integrated into Windows; this script simply provides an easier interface.
+✔ Additionally, system information such as computer name, local IP address, Windows version, and installed CPU will be displayed.
+   - Computername  
+   - Lokale IP-Adresse  
+   - Windows-Version  
+   - CPU-Modell
+
+## 📝 Version History  
+🔹 **Version 3.6.1:** Minor bug fixes and code cleanup.  
+🔹 **Version 3.6.0:** Revised network reset and performance optimization.  
+🔹 **Version 3.5.0:** Fixes and improvements to network reset and performance optimization.  
+🔹 **Version 3.0.0:** Added minor features and integrated system information.  
+🔹 **Version 2.5.0:** Small revisions and added recovery options.
+
+
