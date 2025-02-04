@@ -44,6 +44,9 @@ Es hilft dabei, Probleme im Windows-Betriebssystem zu erkennen und zu beheben, i
 🔹 **Version 3.0.0** – Integration neuer Funktionen & Anzeige von Systeminformationen  
 🔹 **Version 2.5.0** – Erweiterung der Wiederherstellungsoptionen und kleinere Überarbeitungen
 
+---
+# ENGLISH
+
 # WinRep | Windows Repair & Optimization
 
 **Version: 3.6.1**
@@ -53,10 +56,10 @@ The PowerShell script "WinRep.ps1" is a comprehensive script that includes vario
 It provides a collection of useful tools and commands to identify and resolve issues with the Windows operating system.
 
 ## 🚀 Usage
-1. Run the script "WinRep.ps1" or the compiled EXE.
-2. The script displays a menu with options for different diagnostic and repair tasks.
-3. Select the desired option by entering the corresponding number.
-4. The script executes the appropriate commands based on the selected option.
+1. Run the script "WinRep.ps1" or the compiled EXE.  
+2. The script displays a menu with options for different diagnostic and repair tasks.  
+3. Select the desired option by entering the corresponding number.  
+4. The script executes the appropriate commands based on the selected option.  
 5. Once completed, a confirmation message will be displayed.
 
 ## 🛠️ Menu Options  
@@ -73,9 +76,9 @@ It provides a collection of useful tools and commands to identify and resolve is
 1️⃣1️⃣ **Create a System Restore Point**  
 
 ## ℹ️ Notes
-✔ The script helps detect and, if necessary, fix Windows issues.
-✔ All command-line operations are integrated into Windows; this script simply provides an easier interface.
-✔ Additionally, system information such as computer name, local IP address, Windows version, and installed CPU will be displayed.
+✔ The script helps detect and, if necessary, fix Windows issues.  
+✔ All command-line operations are integrated into Windows; this script simply provides an easier interface.  
+✔ Additionally, system information such as computer name, local IP address, Windows version, and installed CPU will be displayed.  
    - Computername  
    - Lokale IP-Adresse  
    - Windows-Version  
