@@ -5,12 +5,12 @@ $host.ui.RawUI.WindowTitle = "Windows - Reparatur-Tool"
 [Console]::setBufferSize(101,45) #width,height
 
 $Display = {
-Write-Host "                             __      __.__      __________               
-                            /  \    /  \__| ____\______   \ ____ ______  
-                            \   \/\/   /  |/    \|       _// __ \\____ \ 
+Write-Host "                             __      __.__      __________
+                            /  \    /  \__| ____\______   \ ____ ______
+                            \   \/\/   /  |/    \|       _// __ \\____ \
                              \        /|  |   |  \    |   \  ___/|  |_> >
-                              \__/\  / |__|___|  /____|_  /\___  >   __/ 
-                                   \/          \/       \/     \/|__|                        v3.5.0" -ForegroundColor Red
+                              \__/\  / |__|___|  /____|_  /\___  >   __/
+                                   \/          \/       \/     \/|__|                        v3.7.0" -ForegroundColor Red
 }
 
 # Computernamen abrufen
@@ -52,44 +52,6 @@ function Format-Text($text) {
     return $text + (' ' * $padding)
     }
 
-$RestoreSystem = {
-    Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
-    Write-Host "           ╠══════════════════════════" -ForegroundColor Yellow -NoNewLine
-    Write-Host " Windows - Systemrestore " -ForegroundColor Magenta -NoNewLine
-    Write-Host "══════════════════════════╣" -ForegroundColor Yellow
-    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "   Sichere Systemdateien, Treiberdatein und Konfigurationsdatein....         " -ForegroundColor Red -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow
-    Start-Sleep 2
-    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "   Sichere Registrierungsdatenbank....                                       " -ForegroundColor Red -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow
-    Start-Sleep 2
-    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "   Sichere Master Boot Record (MBR)....                                      " -ForegroundColor Red -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow
-    Start-Sleep 2
-    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "   Sichere Anwendungsdaten und Einstellungen....                             " -ForegroundColor Red -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow
-    Start-Sleep 2
-    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "   Erstelle Wiederherstellungspunkt.... Bitte Warten                         " -ForegroundColor Red -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow
-    # Erstellung des Wiederherstellungspunkts
-    Checkpoint-Computer -Description "$restorePointName" -RestorePointType "MODIFY_SETTINGS"
-    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-    Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
-    Write-Host "`n           Ein Wiederherstellungspunkt mit dem Namen '$restorePointName' wurde erstellt."
-    Write-Host
-    Start-Sleep 1
-}
-
 function menu {
     Clear-Host
     Invoke-Command -ScriptBlock $Display
@@ -101,15 +63,15 @@ function menu {
     Write-Host "           ║" -ForegroundColor Yellow -NoNewline
     Write-Host ("    Computername   = {0}" -f (Format-Text $computerName)) -ForegroundColor Green -NoNewline
     Write-Host "║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewline 
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewline
     Write-Host ("    Netzwerk - IP  = {0}" -f (Format-Text $activeIP)) -ForegroundColor Green -NoNewline
     Write-Host "║" -ForegroundColor Yellow
-    Write-Host "           ║" -ForegroundColor Yellow -NoNewline 
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewline
     Write-Host ("    Betriebssystem = {0}" -f (Format-Text $operatingSystem)) -ForegroundColor Green -NoNewline
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewline
     Write-Host ("    Prozessor      = {0}" -f (Format-Text $cpuName)) -ForegroundColor Green -NoNewline
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╠═══════════════════════════════" -ForegroundColor Yellow -NoNewline
     Write-Host " Windows Tools " -ForegroundColor Magenta -NoNewline
@@ -117,22 +79,22 @@ function menu {
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     1: Windows Komponentenspeicher auf Fehler Prüfen      [ScanHealth]      " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     2: Überprüfen ob Windows als beschädigt makiert wurde [CheckHealth]     " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     3: Automatische Reparaturvogänge durchführen          [RestoreHealth]   " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     4: Abgelöste Startkomponenten bereinigen              [ComponentCleanup]" -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     5: Systemdateien Prüfen und Reparieren                [SFC Scannow]     " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     6: Netzwerkeinstellungen zurücksetzen                 [FlushDNS usw.]   " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╠═════════════════════════════════" -ForegroundColor Yellow -NoNewline
     Write-Host " Sonstiges " -ForegroundColor Magenta -NoNewline
@@ -140,19 +102,19 @@ function menu {
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     7: Windows Store Zurücksetzen / Cache Reinigung                         " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "     8: Zuverlässigkeitsverlauf                                              " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "     8: Temporäre Dateien bereinigen                                         " -ForegroundColor Cyan -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     9: Upgrade von Windows Home auf Windows Pro                             " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow 
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "    10: Windows Höchstleistungsmodus                                         " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "    11: Windows Wiederherstellungspunkt erstellen                            " -ForegroundColor Cyan -NoNewLine
-    Write-Host "║" -ForegroundColor Yellow  
+    Write-Host "    11: Zeige Systeminformationen                                            " -ForegroundColor Cyan -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ╠═════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
@@ -197,7 +159,7 @@ function menu {
 
             # Startet den DISM Checkmodus um zu überprüfen ob das Windows Abbild als beschädigt markiert wurde.
             if ($actions -eq 2) {
-                Clear-Host          
+                Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
                 Write-Host "           ╠═════════════════════════════" -ForegroundColor Yellow -NoNewLine
@@ -217,7 +179,7 @@ function menu {
 
             # Startet den DISM Wiederherstellungmodus um ein beschädigtes Windows Abbild zu Reparieren.
             if ($actions -eq 3) {
-                Clear-Host          
+                Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
                 Write-Host "           ╠═══════════════════════════════" -ForegroundColor Yellow -NoNewLine
@@ -256,7 +218,7 @@ function menu {
                 Write-Host "   Dieser Vorgang wird einige Minuten dauern.                                " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
                 Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
+                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
                 Start-Process -Wait -FilePath "C:\Windows\System32\DISM.exe" -ArgumentList '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow
                 Write-Host
                 Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
@@ -303,9 +265,8 @@ function menu {
                 foreach ($adapter in $networkAdapters) {
                     netsh interface ip set address name="$($adapter.Name)" source=dhcp | Out-Null
                     netsh interface ipv6 set address name="$($adapter.Name)" source=dhcp | Out-Null
-                    Start-Sleep 1
                 }
-                Start-Sleep 1 
+                Start-Sleep 1
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Zurücksetzen des Winsock API Katalogs auf Standardeinstellungen.          " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
@@ -332,16 +293,19 @@ function menu {
                 Write-Host "   Zurücksetzen der Proxy Einstellungen.                                     " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
                 netsh winhttp reset proxy | Out-Null
+                Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -Name AutoConfigURL -Value ""
+                Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -Name ProxyEnable -Value 0
+                Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -Name AutoDetect -Value 1
                 Start-Sleep 1
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Netzwerk Reset Abgeschlossen.                                             " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
                 Start-Sleep 1
-                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow 
-                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
                 Write-Host "`n           Bitte starten Sie Ihr Gerät neu!" -ForegroundColor Green
                 Write-Host
-                    $UpgradeSure1 = Read-Host "           Möchten Sie jetzt neu starten? (J/N)" 
+                    $UpgradeSure1 = Read-Host "           Möchten Sie jetzt neu starten? (J/N)"
                     if ($UpgradeSure1 -eq 'J') {
                     Write-Host "`n           Neustart..." -ForegroundColor Cyan
                     Start-Sleep 3
@@ -356,9 +320,57 @@ function menu {
                 Start-Process -FilePath "wsreset.exe" -Wait
             }
 
-            # Öffnet den Windows Zuverlässigkeitsverlauf.
+            # Bereinige Temporäre Dateien.
             if ($actions -eq 8) {
-                perfmon /rel
+                Clear-Host
+                Invoke-Command -ScriptBlock $Display
+                Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
+                Write-Host "           ╠════════════════════════════════" -ForegroundColor Yellow -NoNewLine
+                Write-Host " TempCleaner " -ForegroundColor Magenta -NoNewLine
+                Write-Host "════════════════════════════════╣" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow 
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Starte bereinigung von Temporäre Dateien...                               " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                $Keys = @(
+                    "Active Setup Temp Folders",
+                    "Downloaded Program Files",
+                    "Internet Cache Files",
+                    "Memory Dump Files",
+                    "Old ChkDsk Files",
+                    "Previous Installations",
+                    "Recycle Bin",
+                    "Service Pack Cleanup",
+                    "Setup Log Files",
+                    "System error memory dump files",
+                    "System error minidump files",
+                    "Temporary Files",
+                    "Temporary Setup Files",
+                    "Thumbnail Cache",
+                    "Update Cleanup",
+                    "Upgrade Discarded Files",
+                    "Windows Error Reporting Archive Files",
+                    "Windows Error Reporting Queue Files",
+                    "Windows Error Reporting System Archive Files",
+                    "Windows Error Reporting System Queue Files",
+                    "Windows Upgrade Log Files"
+                )
+
+                $BaseKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches"
+
+                foreach ($Key in $Keys) {
+                    New-ItemProperty -Path "$BaseKey\$Key" -Name "StateFlags0100" -PropertyType DWORD -Value 0x2 -Force -ErrorAction SilentlyContinue | Out-Null
+                }
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Dieser Vorgang wird einige Minuten dauern.                                " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
+                Start-Process -Wait -FilePath "$env:SystemRoot\System32\cleanmgr.exe" -ArgumentList "/sagerun:200 " -NoNewWindow
+                Write-Host
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
+                $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
             # Windows Home System mit KMS Upgrade Key auf Windows Pro ändern ohne Neuinstallation.
@@ -429,12 +441,9 @@ function menu {
                 $powerPlans = powercfg.exe /list
                 $planExists = $powerPlans -match $planGUID
 
-                if ($planExists) {
-                } else {   
-
-                powercfg -duplicate 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c | Out-Null
-                     
-                    }
+                if (-not ($powerPlans -match $planGUID)) {
+                    powercfg -duplicate "$planGUID" | Out-Null 2>$null
+                }
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Aktiviere Höchstleistungs Energieplan...                                  " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow 
@@ -513,67 +522,193 @@ function menu {
                 Write-Host "║" -ForegroundColor Yellow
                 Start-Sleep 1
 
+                $apps = @(
+                    "Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe",
+                    "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe",
+                    "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
+                    "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
+                    "Microsoft.WindowsCamera_8wekyb3d8bbwe",
+                    "Microsoft.549981C3F5F10_8wekyb3d8bbwe",
+                    "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe",
+                    "Microsoft.GetHelp_8wekyb3d8bbwe",
+                    "Microsoft.ZuneMusic_8wekyb3d8bbwe",
+                    "microsoft.windowscommunicationsapps_8wekyb3d8bbwe",
+                    "Microsoft.WindowsMaps_8wekyb3d8bbwe",
+                    "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe",
+                    "Microsoft.WindowsStore_8wekyb3d8bbwe",
+                    "Microsoft.ZuneVideo_8wekyb3d8bbwe",
+                    "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",
+                    "Microsoft.Office.OneNote_8wekyb3d8bbwe",
+                    "Microsoft.MSPaint_8wekyb3d8bbwe",
+                    "Microsoft.People_8wekyb3d8bbwe",
+                    "Microsoft.Windows.Photos_8wekyb3d8bbwe",
+                    "windows.immersivecontrolpanel_cw5n1h2txyewy",
+                    "Microsoft.SkypeApp_kzf8qxf38zg5c",
+                    "Microsoft.ScreenSketch_8wekyb3d8bbwe",
+                    "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
+                    "Microsoft.Getstarted_8wekyb3d8bbwe",
+                    "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
+                    "Microsoft.BingWeather_8wekyb3d8bbwe",
+                    "Microsoft.XboxApp_8wekyb3d8bbwe",
+                    "Microsoft.YourPhone_8wekyb3d8bbwe",
+                    "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",
+                    "Microsoft.Xbox.TCUI_8wekyb3d8bbwe"
+                )
+
+                foreach ($app in $apps) {
+                    $path = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\$app"
+                    if (!(Test-Path $path)) {
+                        New-Item -Path $path -Force | Out-Null
+                    }
+                    Set-ItemProperty -Path $path -Name "Disabled" -Value 1 -Type DWord
+                    Set-ItemProperty -Path $path -Name "DisabledByUser" -Value 1 -Type DWord
+                }
+
                 Write-Host "           ║                                                                             ║" -ForegroundColor Yellow 
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow 
                 Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
                 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
-            # Wiederherstellungspunkt erstellen.
+            # Analysiere System-Informationen und gib diese als txt Datei aus.
             if ($actions -eq 11) {
+
                 Clear-Host
                 Invoke-Command -ScriptBlock $Display
                 Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
-                Write-Host "           ╠══════════════════════════" -ForegroundColor Yellow -NoNewLine
-                Write-Host " Windows - Systemrestore " -ForegroundColor Magenta -NoNewLine
-                Write-Host "══════════════════════════╣" -ForegroundColor Yellow
+                Write-Host "           ╠═══════════════════════════" -ForegroundColor Yellow -NoNewLine
+                Write-Host " Windows - information " -ForegroundColor Magenta -NoNewLine
+                Write-Host "═══════════════════════════╣" -ForegroundColor Yellow
                 Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   Ein Windows-Wiederherstellungspunkt ist eine Möglichkeit,                 " -ForegroundColor Red -NoNewLine
+                Write-Host "   Check Windows-Version....                                                 " -ForegroundColor Red -NoNewLine
                 Write-Host "║" -ForegroundColor Yellow
+
+                # Desktop-Pfad ermitteln
+                $desktopPath = [System.IO.Path]::Combine($env:USERPROFILE, "Desktop", "Systeminfo.txt")
+
+    $output = @"
+
+    Systeminformationen
+
+    Betriebssystem
+        Edition       = $((Get-CimInstance Win32_OperatingSystem).Caption)
+        Build-Nummer  = $((Get-CimInstance Win32_OperatingSystem).Version)`n
+"@
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Check Processor-Information....                                           " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Get-CimInstance Win32_Processor| ForEach-Object {
+    $output += @"
+
+    Prozessor         
+        Name          = $((Get-CimInstance -ClassName Win32_Processor).Name)
+        Kerne/Threads = $((Get-CimInstance -ClassName Win32_Processor).NumberOfCores)/$((Get-CimInstance -ClassName Win32_Processor).ThreadCount)
+        Sockel        = $((Get-CimInstance -ClassName Win32_Processor).SocketDesignation)`n
+
+"@
+}
+    Start-Sleep 1
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Check Graphic-Information....                                             " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Start-Sleep 1
+Get-CimInstance -ClassName Win32_VideoController | ForEach-Object {
+    $output += @"
+    Grafik-Chip
+        Chip-Name     = $($_.Name)
+        Treiberverion = $($_.DriverVersion)
+        Treiberdatum  = $($_.DriverDate)`n
+
+"@
+
+}    
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Check Motherboard-Information....                                         " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Start-Sleep 1
+    $output += @"
+    Mainboard
+        Hersteller    = $((Get-CimInstance -Class Win32_BaseBoard).Manufacturer)
+        Modell        = $((Get-CimInstance -Class Win32_BaseBoard).Product)
+        Seriennummer  = $((Get-CimInstance -Class Win32_BaseBoard).SerialNumber)
+        Revision      = $((Get-CimInstance -Class Win32_BaseBoard).Version)
+        BIOS-Version  = $((Get-CimInstance Win32_BIOS).SMBIOSBIOSVersion)`n
+
+"@
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Check RAM-Information....                                                 " -ForegroundColor Red -NoNewLine
+    Write-Host "║" -ForegroundColor Yellow
+    Start-Sleep 1
+# Arbeitsspeicher abrufen und formatieren
+Get-CimInstance Win32_PhysicalMemory | ForEach-Object {
+    $output += @"
+    Arbeitsspeicher
+        Hersteller    = $($_.Manufacturer)
+        Modell        = $($_.PartNumber)
+        Seriennummer  = $($_.SerialNumber)
+        Steckplatz    = $($_.DeviceLocator)
+        Speicher      = $([math]::Round($_.Capacity / 1GB, 0)) GB
+        Taktfrequenz  = $($_.ConfiguredClockSpeed) MHz`n
+
+"@
+
+}    
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow    
+    Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+    Write-Host "   Check Disk-Information....                                                " -ForegroundColor Red -NoNewLine
+# Festplatten abrufen und Volumeninformationen einbinden
+Get-CimInstance -Class Win32_DiskDrive | ForEach-Object {
+    # Get Partition Details
+    $partitions = Get-CimInstance -Query "ASSOCIATORS OF {Win32_DiskDrive.DeviceID='$($_.DeviceID)'} WHERE AssocClass=Win32_DiskDriveToDiskPartition"
+    
+    # Standardwerte setzen
+    $volumeLetter = "Kein Laufwerk"
+    $volumeName = "Unbekannt"
+
+    foreach ($partition in $partitions) {
+        # Holen der logischen Laufwerksinformationen, wenn Partitionen vorhanden sind
+        $logicalDrive = Get-CimInstance -Query "ASSOCIATORS OF {Win32_DiskPartition.DeviceID='$($partition.DeviceID)'} WHERE AssocClass=Win32_LogicalDiskToPartition"
+        
+        if ($logicalDrive) {
+            $volumeLetter = $logicalDrive.DeviceID
+            $volumeName = if ($logicalDrive.VolumeName) { $logicalDrive.VolumeName } else { "Kein Name" }
+        }
+    }
+
+    # Festplatten-Daten hinzufügen
+    $output += @"
+    Disk-Drive
+        Modell        = $($_.Model)
+        Speicher      = $([math]::Round($_.Size / 1e9, 0)) GB
+        Laufwerk      = $volumeLetter
+        Volumenname   = $volumeName`n
+
+"@
+}    
+    Write-Host "║" -ForegroundColor Yellow   
+    Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+    Write-Host "           ╠═════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Yellow
+    Start-Sleep 1
+
+# Datei speichern
+$output | Set-Content -Path $desktopPath -Encoding UTF8
+
+# Datei öffnen
+Start-Process "notepad.exe" -ArgumentList "`"$desktopPath`""
+
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   das Betriebssystem auf einen vorherigen stabilen Zustand zurückzusetzen,  " -ForegroundColor Red -NoNewLine
+                Write-Host "  Vorgang Abgeschlossen...                                                   " -ForegroundColor Red -NoNewLine                
                 Write-Host "║" -ForegroundColor Yellow
-                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   um Systemprobleme zu beheben.                                             " -ForegroundColor Red -NoNewLine
-                Write-Host "║" -ForegroundColor Yellow
-                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   Es sichert Systemdateien und ermöglicht eine einfache Wiederherstellung.  " -ForegroundColor Red -NoNewLine
-                Write-Host "║" -ForegroundColor Yellow
-                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow             
-                Enable-ComputerRestore -Drive C:\ | Out-Null
-                $null = & vssadmin.exe resize shadowstorage /For=C: /On=C: /maxSize=5GB
-                Write-Host "           ╠═════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Yellow
-                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
-                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-                Write-Host "   Konfiguration des Windows-Wiederherstellungspunkt wird ausgeführt.        " -ForegroundColor Red -NoNewLine
-                Write-Host "║" -ForegroundColor Yellow    
                 Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
                 Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
-                Write-Host 
-
-                $RestoreName = Read-Host "             Eigener Name für Wiederherstellungspunkt? [Default: FACTORY-RESTORE] (J/N)"
-                if ($RestoreName -eq 'J') {
-                    # Benutzerabfrage für den Namen des Wiederherstellungspunkts
-                    $restorePointName = Read-Host "`n           Geben Sie einen Namen für den Wiederherstellungspunkt an"
-    
-                    Clear-Host
-                    Invoke-Command -ScriptBlock $Display
-                    Invoke-Command -ScriptBlock $RestoreSystem
-                    Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
-                    $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-                    }
-                elseif ($RestoreName -eq 'N') {
-                    # Vorgegebener Name für den Wiederherstellungspunkt
-                    $restorePointName = "FACTORY-RESTORE" 
-                    Clear-Host
-                    $null = & vssadmin delete shadows /all /quiet
-                    Invoke-Command -ScriptBlock $Display
-                    Invoke-Command -ScriptBlock $RestoreSystem
-                    Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
-                    $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-                    }
-                menu
+                Write-Host
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
+                $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
             # Github Readme öffnen für weitere Informationen.
