@@ -10,7 +10,7 @@ Write-Host "                             __      __.__      __________
                             \   \/\/   /  |/    \|       _// __ \\____ \
                              \        /|  |   |  \    |   \  ___/|  |_> >
                               \__/\  / |__|___|  /____|_  /\___  >   __/
-                                   \/          \/       \/     \/|__|                        v3.7.0" -ForegroundColor Red
+                                   \/          \/       \/     \/|__|                        v3.8.1" -ForegroundColor Red
 }
 
 # Computernamen abrufen
@@ -101,7 +101,7 @@ function menu {
     Write-Host "═════════════════════════════════╣" -ForegroundColor Yellow
     Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
-    Write-Host "     7: Windows Store Zurücksetzen / Cache Reinigung                         " -ForegroundColor Cyan -NoNewLine
+    Write-Host "     7: Windows Updates Zurücksetzen / Cache Reinigung                       " -ForegroundColor Cyan -NoNewLine
     Write-Host "║" -ForegroundColor Yellow
     Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
     Write-Host "     8: Temporäre Dateien bereinigen                                         " -ForegroundColor Cyan -NoNewLine
@@ -264,8 +264,11 @@ function menu {
                 $networkAdapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }
                 foreach ($adapter in $networkAdapters) {
                     netsh interface ip set address name="$($adapter.Name)" source=dhcp | Out-Null
-                    netsh interface ipv6 set address name="$($adapter.Name)" source=dhcp | Out-Null
+                    netsh interface ip set dns "$($adapter.Name)" dhcp | Out-Null
+                    netsh interface ipv6 set dns "$($adapter.Name)" dhcp | Out-Null
                 }
+                # IPv6 auf DHCP setzen
+                netsh interface ipv6 reset | Out-Null
                 Start-Sleep 1
                 Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
                 Write-Host "   Zurücksetzen des Winsock API Katalogs auf Standardeinstellungen.          " -ForegroundColor Red -NoNewLine
@@ -317,7 +320,58 @@ function menu {
 
             # Bereinigung des Microsoft Store Cache zur Fehlerbehebung.
             if ($actions -eq 7) {
-                Start-Process -FilePath "wsreset.exe" -Wait
+                Clear-Host
+                Invoke-Command -ScriptBlock $Display
+                Write-Host " ══════════╦═════════════════════════════════════════════════════════════════════════════╦══════════" -ForegroundColor Yellow
+                Write-Host "           ╠═══════════════════════════════" -ForegroundColor Yellow -NoNewLine
+                Write-Host " Reset Updates " -ForegroundColor Magenta -NoNewLine
+                Write-Host "═══════════════════════════════╣" -ForegroundColor Yellow
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Attribute von catroot2 und seinen Dateien zurücksetzen.                   " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                attrib -h -r -s "$env:windir\system32\catroot2"
+                attrib -h -r -s "$env:windir\system32\catroot2\*.*"
+                Start-Sleep 1
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Windows Update, Kryptografie und BITS-Dienst stoppen...                   " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Stop-Service -Name wuauserv -Force
+                Stop-Service -Name CryptSvc -Force
+                Stop-Service -Name BITS -Force
+                Stop-Service -Name msiserver -Force
+                Start-Sleep 1
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Benenne Update-Cache ordner um...                                         " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Rename-Item -Path "$env:windir\system32\catroot2" -NewName "catroot2.old" -ErrorAction SilentlyContinue
+                Rename-Item -Path "$env:windir\SoftwareDistribution" -NewName "sold.old" -ErrorAction SilentlyContinue
+                Rename-Item -Path "$env:ALLUSERSPROFILE\Microsoft\Network\downloader" -NewName "downloader.old" -ErrorAction SilentlyContinue
+                Start-Sleep 1
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Starte Update-Dienste erneut..                                            " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Start-Service -Name BITS
+                Start-Service -Name CryptSvc
+                Start-Service -Name wuauserv
+                Start-Service -Name msiserver
+                Start-Sleep 1
+                Write-Host "           ║" -ForegroundColor Yellow -NoNewLine
+                Write-Host "   Windows Update-Dienste wurden zurückgesetzt!                              " -ForegroundColor Red -NoNewLine
+                Write-Host "║" -ForegroundColor Yellow
+                Start-Sleep 1
+                Write-Host "           ║                                                                             ║" -ForegroundColor Yellow
+                Write-Host "           ╚═════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
+                Write-Host "`n           Bitte starten Sie Ihr Gerät neu!" -ForegroundColor Green
+                Write-Host
+                    $UpgradeSure1 = Read-Host "           Möchten Sie jetzt neu starten? (J/N)"
+                    if ($UpgradeSure1 -eq 'J') {
+                    Write-Host "`n           Neustart..." -ForegroundColor Cyan
+                    Start-Sleep 3
+                    Restart-Computer
+                    }
+                Write-Host "`n           Drücken Sie eine beliebige Taste, um fortzufahren..." -ForegroundColor Green
+                $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             }
 
             # Bereinige Temporäre Dateien.
