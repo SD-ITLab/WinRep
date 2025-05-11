@@ -1,4 +1,5 @@
-![WinRep](https://github.com/user-attachments/assets/0ae514c2-5f21-4724-ad9c-f58bf5b4fe24)
+![Winrep](https://github.com/user-attachments/assets/98ef822e-b4ae-4c2e-961b-aa4732a108ba)
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://badgen.net/github/license/SD-ITLab/WinRep)
 
