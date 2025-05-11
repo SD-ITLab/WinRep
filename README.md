@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://badgen.net/github/license/SD-ITLab/WinRep)
 
 # WinRep | Windows Diagnose- & Reparatur-Skript  
-**Version: 3.6.1**  
+**Version: 3.8.1**  
 
 ## 📌 Beschreibung  
 **WinRep.ps1** ist ein leistungsstarkes **PowerShell-Skript**, das verschiedene Windows-Diagnose- und Wiederherstellungsfunktionen vereint.  
@@ -23,11 +23,11 @@ Es hilft dabei, Probleme im Windows-Betriebssystem zu erkennen und zu beheben, i
 4️⃣ **Abgelöste Startkomponenten bereinigen** *(ComponentCleanup)*  
 5️⃣ **Systemdateien prüfen und reparieren** *(sfc /scannow)*  
 6️⃣ **Netzwerkeinstellungen zurücksetzen** *(FlushDNS, WinSock-Reset & mehr)*  
-7️⃣ **Windows Store zurücksetzen / Cache bereinigen**  
+7️⃣ **Windows Updates zurücksetzen / Cache bereinigen**  
 8️⃣ **Zuverlässigkeitsverlauf anzeigen**  
 9️⃣ **Upgrade von Windows Home auf Windows Pro durchführen**  
 🔠 **Windows-Höchstleistungsmodus aktivieren** *(Energiesparplan inkl. weiterer Optimierungen)*  
-1️⃣1️⃣ **Wiederherstellungspunkt erstellen**  
+1️⃣1️⃣ **Zeige Systeminformationen**  
 
 ## ℹ️ Hinweise  
 ✔ **WinRep** erleichtert die Fehlerdiagnose und -behebung durch eine intuitive Oberfläche.  
@@ -39,6 +39,7 @@ Es hilft dabei, Probleme im Windows-Betriebssystem zu erkennen und zu beheben, i
    - CPU-Modell  
 
 ## 📝 Versionshistorie  
+🔹 **Version 3.8.1** – Erweiterung des Netzwerks-Reset (ProxyReset) + Erzeugung einer Systeminformationsdatei  
 🔹 **Version 3.6.1** – Kleinere Fehlerbehebungen und Code-Bereinigung  
 🔹 **Version 3.6.0** – Überarbeitung des Netzwerk-Resets und Performance-Optimierung  
 🔹 **Version 3.5.0** – Fixes und Erweiterung der Netzwerk-Reset-Option  
@@ -50,7 +51,7 @@ Es hilft dabei, Probleme im Windows-Betriebssystem zu erkennen und zu beheben, i
 
 # WinRep | Windows Repair & Optimization
 
-**Version: 3.6.1**
+**Version: 3.8.1**
 
 ## 📌 Description
 The PowerShell script "WinRep.ps1" is a comprehensive script that includes various Windows diagnostic and recovery functions. 
@@ -86,6 +87,7 @@ It provides a collection of useful tools and commands to identify and resolve is
    - CPU-Modell
 
 ## 📝 Version History  
+🔹 **Version 3.8.1** - Extension of the network reset (ProxyReset) + generation of a system information file  
 🔹 **Version 3.6.1:** Minor bug fixes and code cleanup.  
 🔹 **Version 3.6.0:** Revised network reset and performance optimization.  
 🔹 **Version 3.5.0:** Fixes and improvements to network reset and performance optimization.  
